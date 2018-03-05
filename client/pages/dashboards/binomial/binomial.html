@@ -51,10 +51,10 @@
       $('.selectedRow').removeClass('selectedRow');
       var row = $(this).data('row');
       var dist = $(this).data('n');
-      $('.row-dist'+dist+'-row'+row).addClass('selectedRow');
+      $("td[data-row='"+row+"'][data-distribution='"+dist+"']").addClass('selectedRow');
     });
 
-    $('td').click(function () {
+    $('td.table-value').click(function () {
       $('.selectedRow').removeClass('selectedRow');
       $('.selectedCol').removeClass('selectedCol');
       var row = $(this).data('row');
@@ -84,7 +84,7 @@
         tableHtml = tableHtml + "<tr>";
         tableHtml = tableHtml + "<td class='row-selector' data-n='"+table.n+"' data-row='"+k+"'>" + k + "</td>";
         table.p.forEach(function(p, index) {
-          tableHtml = tableHtml + "<td data-distribution='"+table.n+"' data-column='"+(index)+"' data-row='"+(k)+"' class='col-dist"+table.n+"-col"+(index)+" row-dist"+table.n+"-row"+(k)+"'>" + compute(k, table.n, p) + "</td>";
+          tableHtml = tableHtml + "<td data-distribution='"+table.n+"' data-column='"+(index)+"' data-row='"+(k)+"' class='table-value col-dist"+table.n+"-col"+(index)+" row-dist"+table.n+"-row"+(k)+"'>" + compute(k, table.n, p) + "</td>";
         });
         tableHtml = tableHtml + "</tr>";
       }

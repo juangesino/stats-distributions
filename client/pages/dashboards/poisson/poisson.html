@@ -45,7 +45,7 @@
     $('.row'+row).addClass('selectedRow');
   });
 
-  $('td').click(function () {
+  $('td.table-value').click(function () {
     $('.selectedRow').removeClass('selectedRow');
     $('.selectedCol').removeClass('selectedCol');
     var row = $(this).data('row');
@@ -73,11 +73,11 @@
       tableHtml = tableHtml + "<tr>";
       tableHtml = tableHtml + "<td class='row-selector' data-row='"+ String(Math.round(row * 100) / 100).replace('.', '-') +"'>" + (Math.round(row * 100) / 100) + "</td>";
       initialColumns.forEach(function (col) {
-        tableHtml = tableHtml + "<td data-column='"+col+"' data-row='"+row+"' class='row"+ String(Math.round(row * 100) / 100).replace('.', '-') +" col"+ String(Math.round(col * 100) / 100).replace('.', '-') +"'>" + compute(row, col) + "</td>";
+        tableHtml = tableHtml + "<td data-column='"+col+"' data-row='"+row+"' class='table-value row"+ String(Math.round(row * 100) / 100).replace('.', '-') +" col"+ String(Math.round(col * 100) / 100).replace('.', '-') +"'>" + compute(row, col) + "</td>";
       });
       var col = startCol;
       while (col <= endCol) {
-        tableHtml = tableHtml + "<td data-column='"+col+"' data-row='"+row+"' class='row"+ String(Math.round(row * 100) / 100).replace('.', '-') +" col"+ String(Math.round(col * 100) / 100).replace('.', '-') +"'>" + compute(row, col) + "</td>";
+        tableHtml = tableHtml + "<td data-column='"+col+"' data-row='"+row+"' class='table-value row"+ String(Math.round(row * 100) / 100).replace('.', '-') +" col"+ String(Math.round(col * 100) / 100).replace('.', '-') +"'>" + compute(row, col) + "</td>";
         col = col + stepCol;
       }
       tableHtml = tableHtml + "</tr>";
