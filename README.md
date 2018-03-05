@@ -7,6 +7,8 @@ An easy way to search probability distribution tables for:
 
 Live demo at [stats.juangesino.com](stats.juangesino.com)
 
+![Demo GIF](https://github.com/juangesino/stats-distributions/raw/master/public/assets/images/intro2.gif)
+
 ## Getting Started
 
 0. **Install Meteor**
