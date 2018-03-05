@@ -1,0 +1,28 @@
+textarea, input, button { outline: none !important; box-shadow:none !important; }
+textarea:focus, input:focus, button:focus { outline: none !important; box-shadow:none !important; }
+
+th, .row-selector {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+td {
+  cursor: pointer;
+}
+
+.row-selector {
+  border-right: 2px solid #ddd;
+}
+
+.selectedCol {
+  background-color: #6ec1ea;
+}
+
+.selectedRow {
+  background-color: #6ec1ea;
+}
+
+.selectedRow.selectedCol {
+  background-color: #4caf50 !important;
+  color: #fff !important;
+}

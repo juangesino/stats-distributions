@@ -1,0 +1,33 @@
+.navbar-default {
+  background-color: #33b5e5;
+  border-color: #33b5e5;
+  border-radius: 0;
+}
+
+.navbar-default .navbar-nav > li > a {
+  color: #fff;
+}
+
+.navbar-default .navbar-nav > li > a:hover {
+  color: rgba(255,255,255,.75)
+}
+
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
+  color: #fff;
+  background-color: rgba(255,255,255,.1);
+}
+
+.navbar-brand {
+  padding: 5px 15px;
+}
+.profile-image-holder {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.profile-image {
+    width: 30px;
+    position: relative;
+    top: -5px;
+    float: left;
+    left: -5px;
+}

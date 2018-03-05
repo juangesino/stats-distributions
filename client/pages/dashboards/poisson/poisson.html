@@ -1,0 +1,168 @@
+<template name="poisson">
+  <div class="row">
+    <div class="col-md-12">
+      <h3>Poisson Distribution Table</h3>
+      <hr>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 table-container table-responsive">
+
+    </div>
+  </div>
+
+  <script type="text/javascript">
+
+  var startRows = 0;
+  var stepRows = 1;
+  var endRows = 29;
+
+  var initialColumns = [0.1, 0.2, 0.3, 0.4, 0.5];
+
+  var startCol = 1;
+  var stepCol = 0.5;
+  var endCol = 15;
+
+
+  printTable();
+
+  function printTable() {
+    $('#distribution-table').remove();
+    var html = generateTableHtml();
+    $('.table-container').append(html);
+  }
+
+  $('th').click(function () {
+    $('.selectedCol').removeClass('selectedCol');
+    var col = $(this).data('column');
+    $('.col'+col).addClass('selectedCol');
+  });
+
+  $('.row-selector').click(function () {
+    $('.selectedRow').removeClass('selectedRow');
+    var row = $(this).data('row');
+    $('.row'+row).addClass('selectedRow');
+  });
+
+  $('td').click(function () {
+    $('.selectedRow').removeClass('selectedRow');
+    $('.selectedCol').removeClass('selectedCol');
+    var row = $(this).data('row');
+    var column = $(this).data('column');
+    $("td[data-row='"+row+"']").addClass('selectedRow');
+    $("td[data-column='"+column+"']").addClass('selectedCol');
+  });
+
+  function generateTableHtml(table) {
+    var tableHtml = '<table class="table table-hover" id="distribution-table"><thead>';
+    tableHtml = tableHtml + '<tr><th></th><th colspan="' + (initialColumns.length + 1 + (((endCol-startCol)/stepCol))) + '">μ</th></tr>';
+    tableHtml = tableHtml + "<tr><th>k</th>";
+    initialColumns.forEach(function (col) {
+      tableHtml = tableHtml + "<th data-column='"+ String(Math.round(col * 100) / 100).replace('.', '-') +"'>" + (Math.round(col * 100) / 100) + "</th>";
+    });
+    var col = startCol;
+    while (col <= endCol) {
+      tableHtml = tableHtml + "<th data-column='"+ String(Math.round(col * 100) / 100).replace('.', '-') +"'>" + (Math.round(col * 100) / 100) + "</th>";
+      col = col + stepCol;
+    }
+    tableHtml = tableHtml + "</tr></thead>";
+    tableHtml = tableHtml + "<tbody>";
+    var row = startRows;
+    while (row <= endRows) {
+      tableHtml = tableHtml + "<tr>";
+      tableHtml = tableHtml + "<td class='row-selector' data-row='"+ String(Math.round(row * 100) / 100).replace('.', '-') +"'>" + (Math.round(row * 100) / 100) + "</td>";
+      initialColumns.forEach(function (col) {
+        tableHtml = tableHtml + "<td data-column='"+col+"' data-row='"+row+"' class='row"+ String(Math.round(row * 100) / 100).replace('.', '-') +" col"+ String(Math.round(col * 100) / 100).replace('.', '-') +"'>" + compute(row, col) + "</td>";
+      });
+      var col = startCol;
+      while (col <= endCol) {
+        tableHtml = tableHtml + "<td data-column='"+col+"' data-row='"+row+"' class='row"+ String(Math.round(row * 100) / 100).replace('.', '-') +" col"+ String(Math.round(col * 100) / 100).replace('.', '-') +"'>" + compute(row, col) + "</td>";
+        col = col + stepCol;
+      }
+      tableHtml = tableHtml + "</tr>";
+      row = row + stepRows;
+    }
+    tableHtml = tableHtml + "</tbody>";
+    tableHtml = tableHtml + "</table>";
+
+    return tableHtml;
+  }
+
+
+
+    function LogGamma(Z) {
+    with (Math) {
+      var S=1+76.18009173/Z-86.50532033/(Z+1)+24.01409822/(Z+2)-1.231739516/(Z+3)+.00120858003/(Z+4)-.00000536382/(Z+5);
+      var LG= (Z-.5)*log(Z+4.5)-(Z+4.5)+log(S*2.50662827465);
+    }
+    return LG
+    }
+
+    function Gcf(X,A) {        // Good for X>A+1
+    with (Math) {
+      var A0=0;
+      var B0=1;
+      var A1=1;
+      var B1=X;
+      var AOLD=0;
+      var N=0;
+      while (abs((A1-AOLD)/A1)>.00001) {
+        AOLD=A1;
+        N=N+1;
+        A0=A1+(N-A)*A0;
+        B0=B1+(N-A)*B0;
+        A1=X*A0+N*A1;
+        B1=X*B0+N*B1;
+        A0=A0/B1;
+        B0=B0/B1;
+        A1=A1/B1;
+        B1=1;
+      }
+      var Prob=exp(A*log(X)-X-LogGamma(A))*A1;
+    }
+    return 1-Prob
+    }
+
+    function Gser(X,A) {        // Good for X<A+1.
+      with (Math) {
+      var T9=1/A;
+      var G=T9;
+      var I=1;
+      while (T9>G*.00001) {
+        T9=T9*X/(A+I);
+        G=G+T9;
+        I=I+1;
+      }
+      G=G*exp(A*log(X)-X-LogGamma(A));
+      }
+      return G
+    }
+
+    function Gammacdf(x,a) {
+    var GI;
+    if (x<=0) {
+      GI=0
+    } else if (x<a+1) {
+      GI=Gser(x,a)
+    } else {
+      GI=Gcf(x,a)
+    }
+    return GI
+    }
+
+    function compute(Z, Lam) {
+    if (Lam<=0) {
+      console.log("Lambda must be positive.");
+    } else if (Z<0) {
+      Poiscdf=0
+    } else {
+      Z=Math.floor(Z)
+      Poiscdf=1-Gammacdf(Lam,Z+1);
+    }
+    Poiscdf=Math.round(Poiscdf*100000)/100000;
+      return Poiscdf;
+    }
+  </script>
+
+</template>

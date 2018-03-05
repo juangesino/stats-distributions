@@ -1,0 +1,112 @@
+<template name="normal">
+  <div class="row">
+    <div class="col-md-12">
+      <h3>Standard Normal Distribution Table</h3>
+      <hr>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 table-container">
+
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var startRows = 0;
+    var stepRows = 0.1;
+    var endRows = 3;
+
+    var startCol = 0;
+    var stepCol = 0.01;
+    var endCol = 0.09;
+
+
+    printTable();
+
+    function printTable() {
+      $('#distribution-table').remove();
+      var html = generateTableHtml();
+      $('.table-container').append(html);
+    }
+
+    $('th').click(function () {
+      $('.selectedCol').removeClass('selectedCol');
+      var col = $(this).data('column');
+      $('.col'+col).addClass('selectedCol');
+    });
+
+    $('.row-selector').click(function () {
+      $('.selectedRow').removeClass('selectedRow');
+      var row = $(this).data('row');
+      $('.row'+row).addClass('selectedRow');
+    });
+
+    $('td').click(function () {
+      $('.selectedRow').removeClass('selectedRow');
+      $('.selectedCol').removeClass('selectedCol');
+      var row = $(this).data('row');
+      var column = $(this).data('column');
+      $("td[data-row='"+row+"']").addClass('selectedRow');
+      $("td[data-column='"+column+"']").addClass('selectedCol');
+    });
+
+    function generateTableHtml(table) {
+      var tableHtml = '<table class="table table-hover" id="distribution-table"><thead>';
+      tableHtml = tableHtml + "<tr><th>Z</th>";
+      var col = startCol;
+      while (col <= endCol) {
+        tableHtml = tableHtml + "<th data-column='"+ String(Math.round(col * 100) / 100).replace('.', '-') +"'>" + (Math.round(col * 100) / 100) + "</th>";
+        col = col + stepCol;
+      }
+      tableHtml = tableHtml + "</tr></thead>";
+      tableHtml = tableHtml + "<tbody>";
+
+      var row = startRows;
+      while (row <= endRows + 0.1) {
+        tableHtml = tableHtml + "<tr>";
+        tableHtml = tableHtml + "<td class='row-selector' data-row='"+ String(Math.round(row * 100) / 100).replace('.', '-') +"'>" + (Math.round(row * 100) / 100) + "</td>";
+        var col = startCol;
+        while (col <= endCol) {
+          tableHtml = tableHtml + "<td data-row='"+row+"' data-column='"+col+"' class='row"+ String(Math.round(row * 100) / 100).replace('.', '-') +" col"+ String(Math.round(col * 100) / 100).replace('.', '-') +"'>" + compute((Math.round((row+col) * 100) / 100), 0, 1) + "</td>";
+          col = col + stepCol;
+        }
+        tableHtml = tableHtml + "</tr>";
+        row = row + stepRows;
+      }
+      tableHtml = tableHtml + "</tbody>";
+      tableHtml = tableHtml + "</table>";
+
+      return tableHtml;
+    }
+
+    function normalcdf(X){   //HASTINGS.  MAX ERROR = .000001
+    	var T=1/(1+.2316419*Math.abs(X));
+    	var D=.3989423*Math.exp(-X*X/2);
+    	var Prob=D*T*(.3193815+T*(-.3565638+T*(1.781478+T*(-1.821256+T*1.330274))));
+    	if (X>0) {
+    		Prob=1-Prob
+    	}
+    	return Prob
+    }
+
+    function compute(Z, M, SD) {
+        with (Math) {
+    		if (SD<0) {
+    			console.log("The standard deviation must be nonnegative.");
+    		} else if (SD==0) {
+    		    if (Z<M){
+    		        Prob=0
+    		    } else {
+    			    Prob=1
+    			}
+    		} else {
+    			Prob=normalcdf((Z-M)/SD);
+    			Prob=round(100000*Prob)/100000;
+    		}
+    	}
+        return Prob;
+    }
+  </script>
+
+</template>
